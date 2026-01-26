@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- СТИЛИ -->
+<th:block th:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</th:block>
+
+<!-- HEADER -->
+<th:block th:fragment="header">
+    <header>
+        <div class="container">
+            <h1>📚 Журнал студентов</h1>
+        </div>
+    </header>
+</th:block>
+
+<!-- NAV -->
+<th:block th:fragment="nav">
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="/" th:classappend="${currentUri == '/' ? 'active' : ''}">Главная</a></li>
+                <li><a href="/students"
+                       th:classappend="${currentUri != null && currentUri.startsWith('/students') ? 'active' : ''}">
+                    Студенты
+                </a></li>
+                <li><a href="/subjects"
+                       th:classappend="${currentUri != null && currentUri.startsWith('/subjects') ? 'active' : ''}">
+                    Предметы
+                </a></li>
+                <li><a href="/grades"
+                       th:classappend="${currentUri != null && currentUri.startsWith('/grades') ? 'active' : ''}">
+                    Оценки
+                </a></li>
+                <li><a href="/attendances"
+                       th:classappend="${currentUri != null && currentUri.startsWith('/attendances') ? 'active' : ''}">
+                    Посещаемость
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+</th:block>
+
+</body>
+</html>

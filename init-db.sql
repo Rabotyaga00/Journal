@@ -1,0 +1,5 @@
+CREATE DATABASE journal_db;
+
+ALTER USER dco_user WITH CREATEDB;
+
+GRANT ALL PRIVILEGES ON DATABASE journal_db TO dco_user;

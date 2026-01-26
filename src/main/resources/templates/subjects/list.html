@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Предметы - Журнал</title>
+    <link th:replace="~{fragments :: styles}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<div th:replace="~{fragments :: nav}"></div>
+
+<div class="container">
+    <div class="content">
+        <div class="page-header">
+            <h1>Список предметов</h1>
+            <a href="/subjects/new" class="btn btn-success">+ Добавить предмет</a>
+        </div>
+
+        <div th:if="${message}" class="alert" th:text="${message}"></div>
+
+        <div th:if="${subjects != null and !subjects.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="subject : ${subjects}">
+                    <td th:text="${subject.id}"></td>
+                    <td th:text="${subject.name}"></td>
+                    <td th:text="${subject.description != null ? subject.description : '-'}"></td>
+                    <td>
+                        <a th:href="@{/subjects/{id}/edit(id=${subject.id})}" class="btn btn-small">Редактировать</a>
+                        <a th:href="@{/subjects/{id}/delete(id=${subject.id})}" class="btn btn-danger btn-small" onclick="return confirm('Вы уверены?')">Удалить</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${subjects == null or subjects.isEmpty()}" class="empty-state">
+            <p>Предметы не найдены. Добавьте первый предмет.</p>
+            <a href="/subjects/new" class="btn">Добавить предмет</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

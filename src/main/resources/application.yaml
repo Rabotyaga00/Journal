@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    # Убедись, что имя БД совпадает с тем, что в твоем init-db.sql и docker-compose
+    url: jdbc:postgresql://postgres:5432/journal_db
+    username: dco_user
+    password: dco_password
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    # Путь к твоему мастер-файлу
+    change-log: classpath:db/changelog-master.yaml
+    enabled: true
+
+  jpa:
+    hibernate:
+      # Меняем на 'validate' или 'none', так как структуру теперь делает Liquibase
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  # Это отключаем, чтобы не конфликтовать с Liquibase
+  sql:
+    init:
+      mode: never
+
+server:
+  port: 8080

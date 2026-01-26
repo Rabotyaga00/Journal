@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: journal-app
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/journal_db
+      - SPRING_DATASOURCE_USERNAME=dco_user
+      - SPRING_DATASOURCE_PASSWORD=dco_password
+    volumes:
+      # Пробрасываем фронтенд напрямую в ресурсы (удобно для разработки)
+      - ./src/main/resources/templates:/app/resources/templates
+      - ./src/main/resources/static:/app/resources/static
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - journal-network
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: journal-db
+    environment:
+      POSTGRES_DB: journal_db
+      POSTGRES_USER: dco_user
+      POSTGRES_PASSWORD: dco_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dco_user -d journal_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - journal-network
+
+networks:
+  journal-network:
+    driver: bridge

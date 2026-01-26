@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title + ' - Журнал' : 'Журнал студентов'}">Журнал студентов</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>📚 Журнал студентов</h1>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <ul>
+            <li><a href="/" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">Главная</a></li>
+            <li><a href="/students" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/students') ? 'active' : ''}">Студенты</a></li>
+            <li><a href="/subjects" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/subjects') ? 'active' : ''}">Предметы</a></li>
+            <li><a href="/grades" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/grades') ? 'active' : ''}">Оценки</a></li>
+            <li><a href="/attendances" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/attendances') ? 'active' : ''}">Посещаемость</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="content">
+        <div th:if="${message}" class="alert" th:text="${message}"></div>
+        <div th:replace="${content}"></div>
+    </div>
+</div>
+</body>
+</html>
