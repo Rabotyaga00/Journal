@@ -18,11 +18,24 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping
-    public String listStudents(Model model) {
-        List<Student> students = studentService.getAllStudents();
+    public String listStudents(
+            @RequestParam(required = false) String q,
+            Model model
+    ) {
+        List<Student> students;
+
+        if (q != null && !q.isBlank()) {
+            students = studentService.search(q);
+        } else {
+            students = studentService.getAllStudents();
+        }
+
         model.addAttribute("students", students);
+        model.addAttribute("q", q);
+
         return "students/list";
     }
+
 
     @GetMapping("/new")
     public String showStudentForm(Model model) {

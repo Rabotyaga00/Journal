@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Посещаемость - Журнал</title>
+    <title>Студенты - Журнал</title>
     <link th:replace="~{fragments :: styles}">
 </head>
 <body>
@@ -13,80 +13,55 @@
 <div class="container">
     <div class="content">
         <div class="page-header">
-            <h1>Посещаемость студентов</h1>
-            <form method="get" action="/attendances/mark" class="inline-form">
-                <select name="subjectId" required>
-                    <option value="">Выберите предмет</option>
-                    <option th:each="subject : ${subjects}"
-                            th:value="${subject.id}"
-                            th:text="${subject.name}"></option>
-                </select>
-                <button type="submit" class="btn btn-success">Отметить посещаемость</button>
-            </form>
+            <h1>Список студентов</h1>
+            <a href="/students/new" class="btn btn-success">+ Добавить студента</a>
         </div>
 
         <div th:if="${message}" class="alert" th:text="${message}"></div>
 
         <div class="filter-form">
-            <form method="get" action="/attendances">
-                <div class="form-group">
-                    <label for="studentId">Студент</label>
-                    <select id="studentId" name="studentId">
-                        <option value="">Все студенты</option>
-                        <option th:each="student : ${students}"
-                                th:value="${student.id}"
-                                th:text="${student.fullName}"
-                                th:selected="${studentId != null and studentId == student.id}"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="subjectId">Предмет</label>
-                    <select id="subjectId" name="subjectId">
-                        <option value="">Все предметы</option>
-                        <option th:each="subject : ${subjects}"
-                                th:value="${subject.id}"
-                                th:text="${subject.name}"
-                                th:selected="${subjectId != null and subjectId == subject.id}"></option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Фильтровать</button>
-                <a href="/attendances" class="btn">Сбросить</a>
+            <form method="get" action="/students">
+                <input type="text"
+                       name="q"
+                       placeholder="Поиск по имени, фамилии или группе"
+                       th:value="${q}">
+
+                <button type="submit" class="btn">Найти</button>
+                <a href="/students" class="btn">Сбросить</a>
             </form>
         </div>
 
-        <div th:if="${attendances != null and !attendances.isEmpty()}">
+
+        <div th:if="${students != null and !students.isEmpty()}">
             <table>
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Студент</th>
-                    <th>Предмет</th>
-                    <th>Дата</th>
-                    <th>Посещение</th>
-                    <th>Примечание</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Номер студента</th>
+                    <th>Группа</th>
                     <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="attendance : ${attendances}">
-                    <td th:text="${attendance.id}"></td>
-                    <td th:text="${attendance.student.fullName}"></td>
-                    <td th:text="${attendance.subject.name}"></td>
-                    <td th:text="${#temporals.format(attendance.date, 'dd.MM.yyyy')}"></td>
+                <tr th:each="student : ${students}">
+                    <td th:text="${student.id}"></td>
+                    <td th:text="${student.firstName}"></td>
+                    <td th:text="${student.lastName}"></td>
+                    <td th:text="${student.studentNumber}"></td>
+                    <td th:text="${student.groupName}"></td>
                     <td>
-                        <span th:if="${attendance.present}" class="present-indicator present">✓ Присутствовал</span>
-                        <span th:if="${!attendance.present}" class="present-indicator absent">✗ Отсутствовал</span>
-                    </td>
-                    <td th:text="${attendance.note != null ? attendance.note : '-'}"></td>
-                    <td>
-                        <a th:href="@{/attendances/{id}/delete(id=${attendance.id})}" class="btn btn-danger btn-small" onclick="return confirm('Вы уверены?')">Удалить</a>
+                        <a th:href="@{/students/{id}/edit(id=${student.id})}" class="btn btn-small">Редактировать</a>
+                        <a th:href="@{/students/{id}/delete(id=${student.id})}" class="btn btn-danger btn-small" onclick="return confirm('Вы уверены?')">Удалить</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div th:if="${attendances == null or attendances.isEmpty()}" class="empty-state">
-            <p>Записи посещаемости не найдены. Отметьте посещаемость для студентов.</p>
+        <div th:if="${students == null or students.isEmpty()}" class="empty-state">
+            <p>Студенты не найдены. Добавьте первого студента.</p>
+            <a href="/students/new" class="btn">Добавить студента</a>
         </div>
     </div>
 </div>

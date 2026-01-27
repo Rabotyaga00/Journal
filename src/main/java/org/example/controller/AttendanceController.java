@@ -34,11 +34,23 @@ public class AttendanceController {
      * Общий список посещаемости
      */
     @GetMapping
-    public String list(Model model) {
-        List<Attendance> attendances = attendanceService.getAllAttendances();
+    public String list(
+            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) Long subjectId,
+            Model model
+    ) {
+        List<Attendance> attendances =
+                attendanceService.getFilteredAttendances(studentId, subjectId);
+
         model.addAttribute("attendances", attendances);
+        model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("subjects", subjectService.getAllSubjects());
+        model.addAttribute("studentId", studentId);
+        model.addAttribute("subjectId", subjectId);
+
         return "attendances/list";
     }
+
 
     /**
      * Форма отметки посещаемости
@@ -77,4 +89,47 @@ public class AttendanceController {
         redirectAttributes.addFlashAttribute("message", "Запись удалена");
         return "redirect:/attendances";
     }
+
+    @GetMapping("/mark")
+    public String markForm(
+            @RequestParam Long subjectId,
+            Model model
+    ) {
+        model.addAttribute("subject", subjectService.getSubjectById(subjectId)
+                .orElseThrow(() -> new RuntimeException("Subject not found")));
+
+        model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("date", LocalDate.now());
+
+        return "attendances/mark";
+    }
+
+    @PostMapping("/mark")
+    public String saveMarked(
+            @RequestParam Long subjectId,
+            @RequestParam LocalDate date,
+            @RequestParam(required = false) List<Long> presentStudents,
+            RedirectAttributes redirectAttributes
+    ) {
+        List<Long> present = presentStudents != null ? presentStudents : List.of();
+
+        studentService.getAllStudents().forEach(student -> {
+            boolean isPresent = present.contains(student.getId());
+
+            attendanceService.saveAttendance(
+                    student.getId(),
+                    subjectId,
+                    date,
+                    isPresent,
+                    null
+            );
+        });
+
+        redirectAttributes.addFlashAttribute("message", "Посещаемость сохранена");
+        return "redirect:/attendances";
+    }
+
+
+
+
 }

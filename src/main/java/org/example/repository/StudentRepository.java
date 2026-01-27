@@ -11,4 +11,10 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByStudentNumber(String studentNumber);
     List<Student> findByGroupName(String groupName);
+    List<Student> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrGroupNameContainingIgnoreCase(
+            String firstName,
+            String lastName,
+            String groupName
+    );
+
 }

@@ -39,4 +39,12 @@ public class StudentService {
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
+
+    public List<Student> search(String query) {
+        return studentRepository
+                .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrGroupNameContainingIgnoreCase(
+                        query, query, query
+                );
+    }
+
 }

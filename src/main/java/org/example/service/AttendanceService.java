@@ -83,5 +83,24 @@ public class AttendanceService {
     public void deleteAttendance(Long id) {
         attendanceRepository.deleteById(id);
     }
+
+    public List<Attendance> getFilteredAttendances(Long studentId, Long subjectId) {
+
+        if (studentId != null && subjectId != null) {
+            return getAttendancesByStudentAndSubject(studentId, subjectId);
+        }
+
+        if (studentId != null) {
+            return getAttendancesByStudent(studentId);
+        }
+
+        if (subjectId != null) {
+            return getAttendancesBySubject(subjectId);
+        }
+
+        return getAllAttendances();
+    }
+
+
 }
 
