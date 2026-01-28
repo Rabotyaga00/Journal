@@ -47,4 +47,9 @@ public class StudentService {
                 );
     }
 
+    public List<Student> findByGroup(String groupName) {
+        return studentRepository
+                .findByGroupNameContainingIgnoreCase(groupName);
+    }
+
 }

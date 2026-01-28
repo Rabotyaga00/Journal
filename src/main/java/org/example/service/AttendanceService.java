@@ -101,6 +101,75 @@ public class AttendanceService {
         return getAllAttendances();
     }
 
+    public List<Attendance> getFiltered(String studentName, Long subjectId) {
+
+        if (studentName != null && !studentName.isBlank() && subjectId != null) {
+            return attendanceRepository
+                    .findByStudentLastNameContainingIgnoreCaseAndSubjectId(
+                            studentName, subjectId
+                    );
+        }
+
+        if (studentName != null && !studentName.isBlank()) {
+            return attendanceRepository
+                    .findByStudentLastNameContainingIgnoreCase(studentName);
+        }
+
+        if (subjectId != null) {
+            return attendanceRepository.findBySubjectId(subjectId);
+        }
+
+        return attendanceRepository.findAll();
+    }
+
+    public List<Attendance> getFilteredAttendances(
+            String studentName,
+            String groupName,
+            Long subjectId
+    ) {
+        boolean hasStudent = studentName != null && !studentName.isBlank();
+        boolean hasGroup = groupName != null && !groupName.isBlank();
+        boolean hasSubject = subjectId != null;
+
+        if (hasStudent && hasGroup && hasSubject) {
+            return attendanceRepository
+                    .findByStudentLastNameContainingIgnoreCaseAndStudentGroupNameContainingIgnoreCaseAndSubjectId(
+                            studentName, groupName, subjectId
+                    );
+        }
+
+        if (hasStudent && hasGroup) {
+            return attendanceRepository
+                    .findByStudentLastNameContainingIgnoreCaseAndStudentGroupNameContainingIgnoreCase(
+                            studentName, groupName
+                    );
+        }
+
+        if (hasGroup && hasSubject) {
+            return attendanceRepository
+                    .findByStudentGroupNameContainingIgnoreCaseAndSubjectId(
+                            groupName, subjectId
+                    );
+        }
+
+        if (hasStudent) {
+            return attendanceRepository
+                    .findByStudentLastNameContainingIgnoreCase(studentName);
+        }
+
+        if (hasGroup) {
+            return attendanceRepository
+                    .findByStudentGroupNameContainingIgnoreCase(groupName);
+        }
+
+        if (hasSubject) {
+            return attendanceRepository.findBySubjectId(subjectId);
+        }
+
+        return attendanceRepository.findAll();
+    }
+
+
 
 }
 

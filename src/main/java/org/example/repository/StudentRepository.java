@@ -17,4 +17,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             String groupName
     );
 
+    List<Student> findByGroupNameContainingIgnoreCase(String groupName);
 }

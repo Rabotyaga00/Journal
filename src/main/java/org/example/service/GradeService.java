@@ -67,4 +67,24 @@ public class GradeService {
     public void deleteGrade(Long id) {
         gradeRepository.deleteById(id);
     }
+
+    public List<Grade> findFiltered(String studentName, Long subjectId) {
+
+        if (studentName != null && !studentName.isBlank() && subjectId != null) {
+            return gradeRepository
+                    .findByStudentLastNameContainingIgnoreCaseAndSubjectId(studentName, subjectId);
+        }
+
+        if (studentName != null && !studentName.isBlank()) {
+            return gradeRepository
+                    .findByStudentLastNameContainingIgnoreCase(studentName);
+        }
+
+        if (subjectId != null) {
+            return gradeRepository.findBySubjectId(subjectId);
+        }
+
+        return gradeRepository.findAll();
+    }
+
 }

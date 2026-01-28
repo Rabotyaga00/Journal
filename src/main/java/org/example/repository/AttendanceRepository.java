@@ -16,4 +16,34 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     List<Attendance> findBySubject(Subject subject);
     List<Attendance> findBySubjectAndDate(Subject subject, LocalDate date);
     List<Attendance> findByStudentAndSubjectAndDate(Student student, Subject subject, LocalDate date);
+
+    List<Attendance> findByStudentLastNameContainingIgnoreCaseAndSubjectId(
+            String lastName,
+            Long subjectId
+    );
+
+    List<Attendance> findBySubjectId(Long subjectId);
+
+    List<Attendance> findByStudentGroupNameContainingIgnoreCase(String groupName);
+
+    List<Attendance> findByStudentLastNameContainingIgnoreCase(String lastName);
+
+    List<Attendance> findByStudentGroupNameContainingIgnoreCaseAndSubjectId(
+            String groupName,
+            Long subjectId
+    );
+
+    List<Attendance> findByStudentLastNameContainingIgnoreCaseAndStudentGroupNameContainingIgnoreCase(
+            String lastName,
+            String groupName
+    );
+
+    List<Attendance> findByStudentLastNameContainingIgnoreCaseAndStudentGroupNameContainingIgnoreCaseAndSubjectId(
+            String lastName,
+            String groupName,
+            Long subjectId
+    );
+
+
+
 }

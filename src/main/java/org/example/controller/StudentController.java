@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.domain.Student;
+import org.example.dto.StudentDto;
 import org.example.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,15 @@ public class StudentController {
         model.addAttribute("q", q);
 
         return "students/list";
+    }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public List<StudentDto> searchStudents(@RequestParam String q) {
+        return studentService.search(q).stream()
+                .limit(10)
+                .map(StudentDto::from)
+                .toList();
     }
 
 

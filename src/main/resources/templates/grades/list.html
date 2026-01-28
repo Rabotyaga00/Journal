@@ -10,6 +10,7 @@
 <div th:replace="~{fragments :: header}"></div>
 <div th:replace="~{fragments :: nav}"></div>
 
+
 <div class="container">
     <div class="content">
         <div class="page-header">
@@ -22,14 +23,20 @@
         <div class="filter-form">
             <form method="get" action="/grades">
                 <div class="form-group">
-                    <label for="studentId">Студент</label>
-                    <select id="studentId" name="studentId">
-                        <option value="">Все студенты</option>
-                        <option th:each="student : ${students}"
-                                th:value="${student.id}"
-                                th:text="${student.fullName}"
-                                th:selected="${studentId != null and studentId == student.id}"></option>
-                    </select>
+                    <label>Студент</label>
+
+<!--                    <input type="text"-->
+<!--                           id="studentSearch"-->
+<!--                           placeholder="Введите фамилию студента"-->
+<!--                           autocomplete="off">-->
+                    <input type="text"
+                           name="studentName"
+                           placeholder="Введите фамилию студента"
+                           th:value="${studentName}">
+
+                    <input type="hidden" name="studentId" id="studentId">
+
+                    <div id="studentResults" class="autocomplete-list"></div>
                 </div>
                 <div class="form-group">
                     <label for="subjectId">Предмет</label>
@@ -80,5 +87,37 @@
         </div>
     </div>
 </div>
+
+<!--<script>-->
+<!--    const input = document.getElementById("studentSearch");-->
+<!--    const results = document.getElementById("studentResults");-->
+<!--    const hiddenId = document.getElementById("studentId");-->
+
+<!--    input.addEventListener("input", async () => {-->
+<!--        const query = input.value.trim();-->
+<!--        results.innerHTML = "";-->
+<!--        hiddenId.value = "";-->
+
+<!--        if (query.length < 2) return;-->
+
+<!--        const response = await fetch(`/students/search?q=${query}`);-->
+<!--        const students = await response.json();-->
+
+<!--        students.forEach(s => {-->
+<!--            const div = document.createElement("div");-->
+<!--            div.className = "autocomplete-item";-->
+<!--            div.textContent = `${s.lastName} ${s.firstName} (${s.groupName})`;-->
+
+<!--            div.onclick = () => {-->
+<!--                input.value = `${s.lastName} ${s.firstName}`;-->
+<!--                hiddenId.value = s.id;-->
+<!--                results.innerHTML = "";-->
+<!--            };-->
+
+<!--            results.appendChild(div);-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
 </body>
 </html>

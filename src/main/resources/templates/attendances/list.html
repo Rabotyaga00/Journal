@@ -15,6 +15,15 @@
         <div class="page-header">
             <h1>Посещаемость студентов</h1>
             <form method="get" action="/attendances/mark" class="inline-form">
+                <div class="form-group">
+                    <label>Группа</label>
+                    <input type="text"
+                           name="groupName"
+                           placeholder="Введите группу"
+                           th:value="${groupName}">
+                </div>
+
+
                 <select name="subjectId" required>
                     <option value="">Выберите предмет</option>
                     <option th:each="subject : ${subjects}"
@@ -30,14 +39,11 @@
         <div class="filter-form">
             <form method="get" action="/attendances">
                 <div class="form-group">
-                    <label for="studentId">Студент</label>
-                    <select id="studentId" name="studentId">
-                        <option value="">Все студенты</option>
-                        <option th:each="student : ${students}"
-                                th:value="${student.id}"
-                                th:text="${student.fullName}"
-                                th:selected="${studentId != null and studentId == student.id}"></option>
-                    </select>
+                        <option value="">Студент</option>
+                        <input type="text"
+                               name="studentName"
+                               placeholder="Введите фамилию студента"
+                               th:value="${studentName}">
                 </div>
                 <div class="form-group">
                     <label for="subjectId">Предмет</label>

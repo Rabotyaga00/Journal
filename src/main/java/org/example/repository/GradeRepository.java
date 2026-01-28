@@ -12,4 +12,12 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
     List<Grade> findByStudent(Student student);
     List<Grade> findByStudentAndSubject(Student student, Subject subject);
     List<Grade> findBySubject(Subject subject);
+    List<Grade> findByStudentLastNameContainingIgnoreCase(String lastName);
+
+    List<Grade> findByStudentLastNameContainingIgnoreCaseAndSubjectId(
+            String lastName,
+            Long subjectId
+    );
+
+    List<Grade> findBySubjectId(Long subjectId);
 }

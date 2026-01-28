@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.domain.Attendance;
+import org.example.domain.Student;
 import org.example.service.AttendanceService;
 import org.example.service.StudentService;
 import org.example.service.SubjectService;
@@ -35,21 +36,27 @@ public class AttendanceController {
      */
     @GetMapping
     public String list(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentName,
+            @RequestParam(required = false) String groupName,
             @RequestParam(required = false) Long subjectId,
             Model model
     ) {
         List<Attendance> attendances =
-                attendanceService.getFilteredAttendances(studentId, subjectId);
+                attendanceService.getFilteredAttendances(
+                        studentName,
+                        groupName,
+                        subjectId
+                );
 
         model.addAttribute("attendances", attendances);
-        model.addAttribute("students", studentService.getAllStudents());
         model.addAttribute("subjects", subjectService.getAllSubjects());
-        model.addAttribute("studentId", studentId);
+        model.addAttribute("studentName", studentName);
+        model.addAttribute("groupName", groupName);
         model.addAttribute("subjectId", subjectId);
 
         return "attendances/list";
     }
+
 
 
     /**
@@ -90,30 +97,83 @@ public class AttendanceController {
         return "redirect:/attendances";
     }
 
+//    @GetMapping("/mark")
+//    public String markForm(
+//            @RequestParam Long subjectId,
+//            Model model
+//    ) {
+//        model.addAttribute("subject", subjectService.getSubjectById(subjectId)
+//                .orElseThrow(() -> new RuntimeException("Subject not found")));
+//
+//        model.addAttribute("students", studentService.getAllStudents());
+//        model.addAttribute("date", LocalDate.now());
+//
+//        return "attendances/mark";
+//    }
+
     @GetMapping("/mark")
     public String markForm(
             @RequestParam Long subjectId,
+            @RequestParam(required = false) String groupName,
             Model model
     ) {
-        model.addAttribute("subject", subjectService.getSubjectById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found")));
+        List<Student> students =
+                groupName != null && !groupName.isBlank()
+                        ? studentService.findByGroup(groupName)
+                        : studentService.getAllStudents();
 
-        model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("subject",
+                subjectService.getSubjectById(subjectId).orElseThrow());
+
+        model.addAttribute("students", students);
+        model.addAttribute("groupName", groupName);
         model.addAttribute("date", LocalDate.now());
 
         return "attendances/mark";
     }
 
+
+//    @PostMapping("/mark")
+//    public String saveMarked(
+//            @RequestParam Long subjectId,
+//            @RequestParam LocalDate date,
+//            @RequestParam(required = false) List<Long> presentStudents,
+//            RedirectAttributes redirectAttributes
+//    ) {
+//        List<Long> present = presentStudents != null ? presentStudents : List.of();
+//
+//        studentService.getAllStudents().forEach(student -> {
+//            boolean isPresent = present.contains(student.getId());
+//
+//            attendanceService.saveAttendance(
+//                    student.getId(),
+//                    subjectId,
+//                    date,
+//                    isPresent,
+//                    null
+//            );
+//        });
+//
+//        redirectAttributes.addFlashAttribute("message", "Посещаемость сохранена");
+//        return "redirect:/attendances";
+//    }
+
     @PostMapping("/mark")
     public String saveMarked(
             @RequestParam Long subjectId,
             @RequestParam LocalDate date,
+            @RequestParam(required = false) String groupName,
             @RequestParam(required = false) List<Long> presentStudents,
             RedirectAttributes redirectAttributes
     ) {
         List<Long> present = presentStudents != null ? presentStudents : List.of();
 
-        studentService.getAllStudents().forEach(student -> {
+        List<Student> students =
+                (groupName != null && !groupName.isBlank())
+                        ? studentService.findByGroup(groupName)
+                        : List.of(); // или бросить исключение
+
+        for (Student student : students) {
             boolean isPresent = present.contains(student.getId());
 
             attendanceService.saveAttendance(
@@ -123,12 +183,11 @@ public class AttendanceController {
                     isPresent,
                     null
             );
-        });
+        }
 
         redirectAttributes.addFlashAttribute("message", "Посещаемость сохранена");
         return "redirect:/attendances";
     }
-
 
 
 

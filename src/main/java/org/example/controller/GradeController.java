@@ -27,36 +27,53 @@ public class GradeController {
     private SubjectService subjectService;
 
     /** 📄 Список всех оценок */
+//    @GetMapping
+//    public String listGrades(
+//            @RequestParam(required = false) Long studentId,
+//            @RequestParam(required = false) Long subjectId,
+//            Model model
+//    ) {
+//        List<Grade> grades;
+//
+//        if (studentId != null && subjectId != null) {
+//            grades = gradeService.getGradesByStudentAndSubject(studentId, subjectId);
+//        } else if (studentId != null) {
+//            grades = gradeService.getGradesByStudent(studentId);
+//        } else if (subjectId != null) {
+//            grades = gradeService.getGradesBySubject(subjectId);
+//        } else {
+//            grades = gradeService.getAllGrades();
+//        }
+//
+//        model.addAttribute("grades", grades);
+//
+//        // 🔥 ВАЖНО — для выпадающих списков
+//        model.addAttribute("students", studentService.getAllStudents());
+//        model.addAttribute("subjects", subjectService.getAllSubjects());
+//
+//        // чтобы выбранные значения сохранялись
+//        model.addAttribute("studentId", studentId);
+//        model.addAttribute("subjectId", subjectId);
+//
+//        return "grades/list";
+//    }
+
     @GetMapping
     public String listGrades(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentName,
             @RequestParam(required = false) Long subjectId,
             Model model
     ) {
-        List<Grade> grades;
-
-        if (studentId != null && subjectId != null) {
-            grades = gradeService.getGradesByStudentAndSubject(studentId, subjectId);
-        } else if (studentId != null) {
-            grades = gradeService.getGradesByStudent(studentId);
-        } else if (subjectId != null) {
-            grades = gradeService.getGradesBySubject(subjectId);
-        } else {
-            grades = gradeService.getAllGrades();
-        }
+        List<Grade> grades = gradeService.findFiltered(studentName, subjectId);
 
         model.addAttribute("grades", grades);
-
-        // 🔥 ВАЖНО — для выпадающих списков
-        model.addAttribute("students", studentService.getAllStudents());
         model.addAttribute("subjects", subjectService.getAllSubjects());
-
-        // чтобы выбранные значения сохранялись
-        model.addAttribute("studentId", studentId);
+        model.addAttribute("studentName", studentName);
         model.addAttribute("subjectId", subjectId);
 
         return "grades/list";
     }
+
 
     /** ➕ Форма добавления оценки */
     @GetMapping("/new")
