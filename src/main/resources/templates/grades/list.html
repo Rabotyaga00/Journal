@@ -20,6 +20,71 @@
 
         <div th:if="${message}" class="alert" th:text="${message}"></div>
 
+        <div class="grade-by-group-block">
+            <h2 class="grade-by-group-title">Выставить оценки группе</h2>
+            <form method="get" action="/grades" class="grade-by-group-search">
+                <input type="hidden" name="studentName" th:value="${studentName}">
+                <input type="hidden" name="subjectId" th:value="${subjectId}">
+                <div class="form-group">
+                    <label for="groupNameForGrades">Название группы</label>
+                    <input type="text"
+                           id="groupNameForGrades"
+                           name="groupNameForGrades"
+                           placeholder="Например: ИВТ-101"
+                           th:value="${groupNameForGrades}">
+                </div>
+                <button type="submit" class="btn">Показать студентов</button>
+            </form>
+
+            <div th:if="${groupStudents != null and !groupStudents.isEmpty()}" class="grade-by-group-form-wrap">
+                <p class="grade-by-group-hint">Укажите оценку каждому студенту (пусто — не выставлять).</p>
+                <form method="post" action="/grades/by-group" class="grade-by-group-form-table">
+                    <div class="form-group">
+                        <label for="byGroupSubjectId">Предмет *</label>
+                        <select id="byGroupSubjectId" name="subjectId" required>
+                            <option value="">Выберите предмет</option>
+                            <option th:each="subject : ${subjects}"
+                                    th:value="${subject.id}"
+                                    th:text="${subject.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="byGroupDate">Дата</label>
+                        <input type="date" id="byGroupDate" name="date" th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="byGroupComment">Комментарий</label>
+                        <input type="text" id="byGroupComment" name="comment" placeholder="Необязательно">
+                    </div>
+                    <div class="table-wrapper grade-by-group-table">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Студент</th>
+                                <th>Номер</th>
+                                <th>Оценка</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="student : ${groupStudents}">
+                                <td th:text="${student.fullName}">ФИО</td>
+                                <td th:text="${student.studentNumber}">№</td>
+                                <td>
+                                    <input type="hidden" name="studentIds" th:value="${student.id}">
+                                    <input type="number" name="values" min="1" max="5" placeholder="—" class="grade-input">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-success">Сохранить оценки</button>
+                </form>
+            </div>
+            <p th:if="${groupNameForGrades != null and groupNameForGrades != '' and (groupStudents == null or groupStudents.isEmpty())}" class="grade-by-group-empty">
+                Студенты по группе «<span th:text="${groupNameForGrades}"></span>» не найдены.
+            </p>
+        </div>
+
         <div class="filter-form">
             <form method="get" action="/grades">
                 <div class="form-group">
@@ -53,7 +118,7 @@
             </form>
         </div>
 
-        <div th:if="${grades != null and !grades.isEmpty()}">
+        <div th:if="${grades != null and !grades.isEmpty()}" class="table-wrapper">
             <table>
                 <thead>
                 <tr>

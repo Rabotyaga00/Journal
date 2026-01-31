@@ -39,11 +39,18 @@
         <div class="filter-form">
             <form method="get" action="/attendances">
                 <div class="form-group">
-                        <option value="">Студент</option>
-                        <input type="text"
-                               name="studentName"
-                               placeholder="Введите фамилию студента"
-                               th:value="${studentName}">
+                    <label>Студент</label>
+                    <input type="text"
+                           name="studentName"
+                           placeholder="Фамилия студента"
+                           th:value="${studentName}">
+                </div>
+                <div class="form-group">
+                    <label>Группа</label>
+                    <input type="text"
+                           name="groupName"
+                           placeholder="Название группы"
+                           th:value="${groupName}">
                 </div>
                 <div class="form-group">
                     <label for="subjectId">Предмет</label>
@@ -60,7 +67,7 @@
             </form>
         </div>
 
-        <div th:if="${attendances != null and !attendances.isEmpty()}">
+        <div th:if="${attendances != null and !attendances.isEmpty()}" class="table-wrapper">
             <table>
                 <thead>
                 <tr>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/students")
@@ -24,13 +25,14 @@ public class StudentController {
             Model model
     ) {
         List<Student> students;
-
         if (q != null && !q.isBlank()) {
             students = studentService.search(q);
         } else {
             students = studentService.getAllStudents();
         }
 
+        Map<String, List<Student>> studentGroups = studentService.groupStudentsByGroup(students);
+        model.addAttribute("studentGroups", studentGroups);
         model.addAttribute("students", students);
         model.addAttribute("q", q);
 

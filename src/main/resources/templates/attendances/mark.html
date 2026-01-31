@@ -28,24 +28,6 @@
                     Изменить дату
                 </label>
 
-                <label>
-                    <select name="subjectId" onchange="this.form.submit()">
-                        <option th:each="s : ${subjects}"
-                                th:value="${s.id}"
-                                th:text="${s.name}"
-                                th:selected="${s.id == subject.id}"></option>
-                    </select>
-                    Изменить предмет
-                </label>
-
-                <label>
-                    Группа
-                    <input type="hidden"
-                           name="groupName"
-                           placeholder="Введите группу"
-                           th:value="${groupName}">
-                </label>
-
             </div>
 
             <table>

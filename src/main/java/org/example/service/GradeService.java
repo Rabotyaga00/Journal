@@ -68,6 +68,36 @@ public class GradeService {
         gradeRepository.deleteById(id);
     }
 
+    /**
+     * Сохраняет оценки по списку студентов (каждому — своя оценка).
+     * Пары (studentIds[i], valueStrs[i]). Пустое значение в valueStrs — пропуск студента.
+     * @return количество сохранённых оценок
+     */
+    public int saveGradesForGroupStudents(List<Long> studentIds, List<String> valueStrs,
+                                          Long subjectId, LocalDate date, String comment) {
+        if (studentIds == null || studentIds.isEmpty()) {
+            return 0;
+        }
+        if (valueStrs == null) {
+            valueStrs = List.of();
+        }
+        Subject subject = subjectService.getSubjectById(subjectId)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+        LocalDate effectiveDate = date != null ? date : LocalDate.now();
+        int count = 0;
+        for (int i = 0; i < studentIds.size(); i++) {
+            String v = i < valueStrs.size() ? valueStrs.get(i) : null;
+            if (v == null || v.isBlank()) continue;
+            try {
+                int value = Integer.parseInt(v.trim());
+                if (value < 1 || value > 5) continue;
+                saveGrade(studentIds.get(i), subjectId, value, effectiveDate, comment);
+                count++;
+            } catch (NumberFormatException ignored) { }
+        }
+        return count;
+    }
+
     public List<Grade> findFiltered(String studentName, Long subjectId) {
 
         if (studentName != null && !studentName.isBlank() && subjectId != null) {

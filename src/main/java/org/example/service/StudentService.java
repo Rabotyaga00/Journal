@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -50,6 +53,21 @@ public class StudentService {
     public List<Student> findByGroup(String groupName) {
         return studentRepository
                 .findByGroupNameContainingIgnoreCase(groupName);
+    }
+
+    /**
+     * Группирует список студентов по названию группы.
+     * Студенты без группы попадают в секцию "Без группы".
+     */
+    public Map<String, List<Student>> groupStudentsByGroup(List<Student> students) {
+        return students.stream()
+                .collect(Collectors.groupingBy(
+                        s -> (s.getGroupName() != null && !s.getGroupName().isBlank())
+                                ? s.getGroupName()
+                                : "Без группы",
+                        TreeMap::new,
+                        Collectors.toList()
+                ));
     }
 
 }

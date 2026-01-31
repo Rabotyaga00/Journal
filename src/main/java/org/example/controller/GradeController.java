@@ -62,6 +62,7 @@ public class GradeController {
     public String listGrades(
             @RequestParam(required = false) String studentName,
             @RequestParam(required = false) Long subjectId,
+            @RequestParam(required = false) String groupNameForGrades,
             Model model
     ) {
         List<Grade> grades = gradeService.findFiltered(studentName, subjectId);
@@ -70,6 +71,10 @@ public class GradeController {
         model.addAttribute("subjects", subjectService.getAllSubjects());
         model.addAttribute("studentName", studentName);
         model.addAttribute("subjectId", subjectId);
+        model.addAttribute("groupNameForGrades", groupNameForGrades);
+        if (groupNameForGrades != null && !groupNameForGrades.isBlank()) {
+            model.addAttribute("groupStudents", studentService.findByGroup(groupNameForGrades.trim()));
+        }
 
         return "grades/list";
     }
@@ -95,6 +100,22 @@ public class GradeController {
     ) {
         gradeService.saveGrade(studentId, subjectId, value, date, comment);
         redirectAttributes.addFlashAttribute("message", "Оценка успешно сохранена");
+        return "redirect:/grades";
+    }
+
+    /** 💾 Сохранить оценки группе (каждому студенту — своя оценка из формы) */
+    @PostMapping("/by-group")
+    public String saveGradesByGroup(
+            @RequestParam Long subjectId,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) String comment,
+            @RequestParam List<Long> studentIds,
+            @RequestParam List<String> values,
+            RedirectAttributes redirectAttributes
+    ) {
+        int count = gradeService.saveGradesForGroupStudents(studentIds, values, subjectId, date, comment);
+        redirectAttributes.addFlashAttribute("message",
+                count > 0 ? "Сохранено оценок: " + count : "Не заполнено ни одной оценки.");
         return "redirect:/grades";
     }
 

@@ -19,7 +19,7 @@
 
         <div th:if="${message}" class="alert" th:text="${message}"></div>
 
-        <div th:if="${subjects != null and !subjects.isEmpty()}">
+        <div th:if="${subjects != null and !subjects.isEmpty()}" class="table-wrapper">
             <table>
                 <thead>
                 <tr>

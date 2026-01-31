@@ -1,18 +1,67 @@
+/* Дополнительные стили для оценок и общие утилиты */
+
+/* ===== Автодополнение ===== */
 .autocomplete-list {
-    border: 1px solid #ccc;
-    max-height: 200px;
+    border: 1px solid var(--color-border, #e2e6f0);
+    border-radius: var(--radius-sm, 8px);
+    max-height: 220px;
     overflow-y: auto;
     position: absolute;
-    background: #fff;
+    background: var(--color-surface, #fff);
     width: 100%;
     z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    margin-top: 4px;
 }
 
 .autocomplete-item {
-    padding: 8px;
+    padding: 12px 14px;
     cursor: pointer;
+    font-size: 0.9375rem;
+    transition: background 0.15s ease;
 }
 
 .autocomplete-item:hover {
-    background: #f0f0f0;
+    background: var(--color-primary-light, rgba(91, 103, 202, 0.12));
+}
+
+.autocomplete-item:not(:last-child) {
+    border-bottom: 1px solid var(--color-border, #e2e6f0);
+}
+
+/* ===== Карточки-фичи (главная) ===== */
+.feature-card {
+    background: var(--color-surface, #fff);
+    border-radius: var(--radius-md, 12px);
+    padding: 28px 24px;
+    height: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card .icon {
+    font-size: 1.75rem;
+    margin-bottom: 14px;
+    display: block;
+}
+
+/* ===== Плавное появление ===== */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content .table-wrapper {
+    animation: fadeUp 0.35s ease;
 }
