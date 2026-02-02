@@ -24,30 +24,6 @@ public class GradeService {
     @Autowired
     private SubjectService subjectService;
 
-    public List<Grade> getAllGrades() {
-        return gradeRepository.findAll();
-    }
-
-    public List<Grade> getGradesByStudent(Long studentId) {
-        Student student = studentService.getStudentById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        return gradeRepository.findByStudent(student);
-    }
-
-    public List<Grade> getGradesByStudentAndSubject(Long studentId, Long subjectId) {
-        Student student = studentService.getStudentById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        Subject subject = subjectService.getSubjectById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-        return gradeRepository.findByStudentAndSubject(student, subject);
-    }
-
-    public List<Grade> getGradesBySubject(Long subjectId) {
-        Subject subject = subjectService.getSubjectById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-        return gradeRepository.findBySubject(subject);
-    }
-
     public Grade saveGrade(Long studentId, Long subjectId, Integer value, LocalDate date, String comment) {
         Student student = studentService.getStudentById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -68,11 +44,6 @@ public class GradeService {
         gradeRepository.deleteById(id);
     }
 
-    /**
-     * Сохраняет оценки по списку студентов (каждому — своя оценка).
-     * Пары (studentIds[i], valueStrs[i]). Пустое значение в valueStrs — пропуск студента.
-     * @return количество сохранённых оценок
-     */
     public int saveGradesForGroupStudents(List<Long> studentIds, List<String> valueStrs,
                                           Long subjectId, LocalDate date, String comment) {
         if (studentIds == null || studentIds.isEmpty()) {

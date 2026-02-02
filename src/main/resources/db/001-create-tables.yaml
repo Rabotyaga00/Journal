@@ -1,5 +1,4 @@
 databaseChangeLog:
-  # 1. Таблица учителей
   - changeSet:
       id: 1
       author: Rabotyaga
@@ -34,7 +33,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-  # 2. Таблица студентов
   - changeSet:
       id: 2
       author: Rabotyaga
@@ -69,7 +67,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-  # 3. Таблица предметов
   - changeSet:
       id: 3
       author: Rabotyaga
@@ -92,7 +89,6 @@ databaseChangeLog:
                   name: description
                   type: TEXT
 
-  # 4. Таблица оценок
   - changeSet:
       id: 4
       author: Rabotyaga
@@ -137,7 +133,6 @@ databaseChangeLog:
                   name: comment
                   type: VARCHAR(500)
 
-  # 5. Таблица посещаемости
   - changeSet:
       id: 5
       author: Rabotyaga
@@ -181,7 +176,7 @@ databaseChangeLog:
               - column:
                   name: note
                   type: VARCHAR(500)
-        # Добавляем уникальный индекс для посещаемости (один студент на одном предмете в один день)
+
         - addUniqueConstraint:
             columnNames: student_id, subject_id, date
             constraintName: uk_attendance_day

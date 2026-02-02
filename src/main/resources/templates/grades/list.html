@@ -89,11 +89,6 @@
             <form method="get" action="/grades">
                 <div class="form-group">
                     <label>Студент</label>
-
-<!--                    <input type="text"-->
-<!--                           id="studentSearch"-->
-<!--                           placeholder="Введите фамилию студента"-->
-<!--                           autocomplete="off">-->
                     <input type="text"
                            name="studentName"
                            placeholder="Введите фамилию студента"
@@ -152,37 +147,6 @@
         </div>
     </div>
 </div>
-
-<!--<script>-->
-<!--    const input = document.getElementById("studentSearch");-->
-<!--    const results = document.getElementById("studentResults");-->
-<!--    const hiddenId = document.getElementById("studentId");-->
-
-<!--    input.addEventListener("input", async () => {-->
-<!--        const query = input.value.trim();-->
-<!--        results.innerHTML = "";-->
-<!--        hiddenId.value = "";-->
-
-<!--        if (query.length < 2) return;-->
-
-<!--        const response = await fetch(`/students/search?q=${query}`);-->
-<!--        const students = await response.json();-->
-
-<!--        students.forEach(s => {-->
-<!--            const div = document.createElement("div");-->
-<!--            div.className = "autocomplete-item";-->
-<!--            div.textContent = `${s.lastName} ${s.firstName} (${s.groupName})`;-->
-
-<!--            div.onclick = () => {-->
-<!--                input.value = `${s.lastName} ${s.firstName}`;-->
-<!--                hiddenId.value = s.id;-->
-<!--                results.innerHTML = "";-->
-<!--            };-->
-
-<!--            results.appendChild(div);-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
 
 </body>
 </html>

@@ -11,7 +11,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=dco_user
       - SPRING_DATASOURCE_PASSWORD=dco_password
     volumes:
-      # Пробрасываем фронтенд напрямую в ресурсы (удобно для разработки)
       - ./src/main/resources/templates:/app/resources/templates
       - ./src/main/resources/static:/app/resources/static
     depends_on:

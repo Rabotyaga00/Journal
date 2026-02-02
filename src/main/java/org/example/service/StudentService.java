@@ -27,14 +27,6 @@ public class StudentService {
         return studentRepository.findById(id);
     }
 
-    public Optional<Student> getStudentByNumber(String studentNumber) {
-        return studentRepository.findByStudentNumber(studentNumber);
-    }
-
-    public List<Student> getStudentsByGroup(String groupName) {
-        return studentRepository.findByGroupName(groupName);
-    }
-
     public Student saveStudent(Student student) {
         return studentRepository.save(student);
     }
@@ -45,7 +37,7 @@ public class StudentService {
 
     public List<Student> search(String query) {
         return studentRepository
-                .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrGroupNameContainingIgnoreCase(
+                .findByFirstNameOrLastNameOrGroupName(
                         query, query, query
                 );
     }
@@ -55,10 +47,6 @@ public class StudentService {
                 .findByGroupNameContainingIgnoreCase(groupName);
     }
 
-    /**
-     * Группирует список студентов по названию группы.
-     * Студенты без группы попадают в секцию "Без группы".
-     */
     public Map<String, List<Student>> groupStudentsByGroup(List<Student> students) {
         return students.stream()
                 .collect(Collectors.groupingBy(

@@ -24,35 +24,6 @@ public class AttendanceService {
     @Autowired
     private SubjectService subjectService;
 
-    public List<Attendance> getAllAttendances() {
-        return attendanceRepository.findAll();
-    }
-
-    public List<Attendance> getAttendancesByStudent(Long studentId) {
-        Student student = studentService.getStudentById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        return attendanceRepository.findByStudent(student);
-    }
-
-    public List<Attendance> getAttendancesByStudentAndSubject(Long studentId, Long subjectId) {
-        Student student = studentService.getStudentById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        Subject subject = subjectService.getSubjectById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-        return attendanceRepository.findByStudentAndSubject(student, subject);
-    }
-
-    public List<Attendance> getAttendancesBySubject(Long subjectId) {
-        Subject subject = subjectService.getSubjectById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-        return attendanceRepository.findBySubject(subject);
-    }
-
-    public List<Attendance> getAttendancesBySubjectAndDate(Long subjectId, LocalDate date) {
-        Subject subject = subjectService.getSubjectById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-        return attendanceRepository.findBySubjectAndDate(subject, date);
-    }
 
     public Attendance saveAttendance(Long studentId, Long subjectId, LocalDate date, Boolean present, String note) {
         Student student = studentService.getStudentById(studentId)
@@ -60,7 +31,6 @@ public class AttendanceService {
         Subject subject = subjectService.getSubjectById(subjectId)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
 
-        // Проверяем, существует ли уже запись на эту дату
         List<Attendance> existing = attendanceRepository.findByStudentAndSubjectAndDate(student, subject, date);
         Attendance attendance;
 
@@ -84,90 +54,6 @@ public class AttendanceService {
         attendanceRepository.deleteById(id);
     }
 
-    public List<Attendance> getFilteredAttendances(Long studentId, Long subjectId) {
-
-        if (studentId != null && subjectId != null) {
-            return getAttendancesByStudentAndSubject(studentId, subjectId);
-        }
-
-        if (studentId != null) {
-            return getAttendancesByStudent(studentId);
-        }
-
-        if (subjectId != null) {
-            return getAttendancesBySubject(subjectId);
-        }
-
-        return getAllAttendances();
-    }
-
-    public List<Attendance> getFiltered(String studentName, Long subjectId) {
-
-        if (studentName != null && !studentName.isBlank() && subjectId != null) {
-            return attendanceRepository
-                    .findByStudentLastNameContainingIgnoreCaseAndSubjectId(
-                            studentName, subjectId
-                    );
-        }
-
-        if (studentName != null && !studentName.isBlank()) {
-            return attendanceRepository
-                    .findByStudentLastNameContainingIgnoreCase(studentName);
-        }
-
-        if (subjectId != null) {
-            return attendanceRepository.findBySubjectId(subjectId);
-        }
-
-        return attendanceRepository.findAll();
-    }
-
-//    public List<Attendance> getFilteredAttendances(
-//            String studentName,
-//            String groupName,
-//            Long subjectId
-//    ) {
-//        boolean hasStudent = studentName != null && !studentName.isBlank();
-//        boolean hasGroup = groupName != null && !groupName.isBlank();
-//        boolean hasSubject = subjectId != null;
-//
-//        if (hasStudent && hasGroup && hasSubject) {
-//            return attendanceRepository
-//                    .findByStudentLastNameContainingIgnoreCaseAndStudentGroupNameContainingIgnoreCaseAndSubjectId(
-//                            studentName, groupName, subjectId
-//                    );
-//        }
-//
-//        if (hasStudent && hasGroup) {
-//            return attendanceRepository
-//                    .findByStudentLastNameContainingIgnoreCaseAndStudentGroupNameContainingIgnoreCase(
-//                            studentName, groupName
-//                    );
-//        }
-//
-//        if (hasGroup && hasSubject) {
-//            return attendanceRepository
-//                    .findByStudentGroupNameContainingIgnoreCaseAndSubjectId(
-//                            groupName, subjectId
-//                    );
-//        }
-//
-//        if (hasStudent) {
-//            return attendanceRepository
-//                    .findByStudentLastNameContainingIgnoreCase(studentName);
-//        }
-//
-//        if (hasGroup) {
-//            return attendanceRepository
-//                    .findByStudentGroupNameContainingIgnoreCase(groupName);
-//        }
-//
-//        if (hasSubject) {
-//            return attendanceRepository.findBySubjectId(subjectId);
-//        }
-//
-//        return attendanceRepository.findAll();
-//    }
 
     public List<Attendance> getFilteredAttendances(
             String studentName,

@@ -26,38 +26,6 @@ public class GradeController {
     @Autowired
     private SubjectService subjectService;
 
-    /** 📄 Список всех оценок */
-//    @GetMapping
-//    public String listGrades(
-//            @RequestParam(required = false) Long studentId,
-//            @RequestParam(required = false) Long subjectId,
-//            Model model
-//    ) {
-//        List<Grade> grades;
-//
-//        if (studentId != null && subjectId != null) {
-//            grades = gradeService.getGradesByStudentAndSubject(studentId, subjectId);
-//        } else if (studentId != null) {
-//            grades = gradeService.getGradesByStudent(studentId);
-//        } else if (subjectId != null) {
-//            grades = gradeService.getGradesBySubject(subjectId);
-//        } else {
-//            grades = gradeService.getAllGrades();
-//        }
-//
-//        model.addAttribute("grades", grades);
-//
-//        // 🔥 ВАЖНО — для выпадающих списков
-//        model.addAttribute("students", studentService.getAllStudents());
-//        model.addAttribute("subjects", subjectService.getAllSubjects());
-//
-//        // чтобы выбранные значения сохранялись
-//        model.addAttribute("studentId", studentId);
-//        model.addAttribute("subjectId", subjectId);
-//
-//        return "grades/list";
-//    }
-
     @GetMapping
     public String listGrades(
             @RequestParam(required = false) String studentName,
@@ -79,8 +47,6 @@ public class GradeController {
         return "grades/list";
     }
 
-
-    /** ➕ Форма добавления оценки */
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("students", studentService.getAllStudents());
@@ -88,7 +54,6 @@ public class GradeController {
         return "grades/form";
     }
 
-    /** 💾 Сохранение оценки */
     @PostMapping
     public String saveGrade(
             @RequestParam Long studentId,
@@ -103,7 +68,6 @@ public class GradeController {
         return "redirect:/grades";
     }
 
-    /** 💾 Сохранить оценки группе (каждому студенту — своя оценка из формы) */
     @PostMapping("/by-group")
     public String saveGradesByGroup(
             @RequestParam Long subjectId,
@@ -119,7 +83,6 @@ public class GradeController {
         return "redirect:/grades";
     }
 
-    /** 🗑 Удаление оценки */
     @GetMapping("/{id}/delete")
     public String deleteGrade(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         gradeService.deleteGrade(id);
